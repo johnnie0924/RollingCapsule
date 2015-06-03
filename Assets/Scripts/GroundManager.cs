@@ -95,7 +95,7 @@ public class GroundManager : MonoBehaviour {
 		instance.transform.SetParent(groundHolder);
 
 		//Create Ground
-		instance = Instantiate(groundTile, new Vector3((columns - 1) / 2f, groundTile.transform.localScale.y / 2, (rows - 1) / 2f), Quaternion.identity) as GameObject;
+		instance = Instantiate(groundTile, new Vector3((columns - 1) / 2f, 0f, (rows - 1) / 2f), Quaternion.identity) as GameObject;
 		instance.transform.localScale = new Vector3(columns, 1f , rows);
 
 		//Create Obstacle & Button
