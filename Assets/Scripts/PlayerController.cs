@@ -57,31 +57,43 @@ public class PlayerController : MonoBehaviour {
 		#endif
 
 		// jump判定
-		if (GameManager.instance.pressSpace && !isJumping)
+		if (GameManager.instance.pressSpace)
 		{
 			GameManager.instance.pressSpace = false;
-			jump ();
+			if(!isJumping)
+			{
+				jump ();
+			}
 		}
 
 		// ChangeSize判定
-		if (GameManager.instance.pressX && !isChangeSize)
+		if (GameManager.instance.pressX)
 		{
 			GameManager.instance.pressX = false;
-			StartCoroutine(ChangeSize ());
+			if(!isChangeSize)
+			{
+				StartCoroutine(ChangeSize ());
+			}
 		}
 
 		// SuperMode判定
-		if (GameManager.instance.pressC && !isSuperMode)
+		if (GameManager.instance.pressC)
 		{
 			GameManager.instance.pressC = false;
-			StartCoroutine(ChangeSuperMode ());
+			if(!isSuperMode)
+			{
+				StartCoroutine(ChangeSuperMode ());
+			}
 		}
 
 		// CopyMyself判定
-		if (GameManager.instance.pressV && !isCopyMyself && isMain)
+		if (GameManager.instance.pressV)
 		{
 			GameManager.instance.pressV = false;
-			StartCoroutine(CopyMyself ());
+			if(!isCopyMyself && isMain)
+			{
+				StartCoroutine(CopyMyself ());
+			}
 		}
 
 		GetComponent<Rigidbody>().AddForce (movement * speed * Time.deltaTime);
@@ -96,6 +108,7 @@ public class PlayerController : MonoBehaviour {
 				other.gameObject.GetComponent<Renderer>().material.color = other.gameObject.GetComponent<ButtonStatus>().myColor;
 				other.gameObject.GetComponent<ButtonStatus>().beColored = true;
 				other.gameObject.GetComponent<Collider>().enabled = false;
+				SoundManager.instance.PlayConflict();
 				GameManager.instance.nowCount++;
 				GameManager.instance.UpdateProgressBar();
 				GameManager.instance.CheckIfGameClear();
@@ -118,6 +131,7 @@ public class PlayerController : MonoBehaviour {
 	private void jump()
 	{
 		isJumping = true;
+		SoundManager.instance.PlayJump ();
 		GetComponent<Rigidbody>().AddForce (new Vector3 (0.0f, 1.0f, 0.0f) * speed * jumpPower * Time.deltaTime);
 	}
 
