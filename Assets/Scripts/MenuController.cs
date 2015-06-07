@@ -5,7 +5,7 @@ public class MenuController : MonoBehaviour {
 
 	public void loadStoryMode()
 	{
-
+		Application.LoadLevel("Main");
 	}
 
 	public void loadCollection()
@@ -15,10 +15,10 @@ public class MenuController : MonoBehaviour {
 
 	public void loadOption()
 	{
-		
+
 	}
 
-	public void loadStoryHelp()
+	public void loadHelp()
 	{
 		
 	}

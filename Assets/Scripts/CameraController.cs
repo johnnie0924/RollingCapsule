@@ -8,21 +8,14 @@ public class CameraController : MonoBehaviour {
 	[HideInInspector] public GameObject player = null;
 
 	[HideInInspector] public GameObject mainCam;
-	[HideInInspector] public GameObject subCam;
 	private bool usingMainCam;
 
 	void Awake () {
-		usingMainCam = true;
-		mainCam = GameObject.FindGameObjectsWithTag("MainCamera")[0];
-		subCam = GameObject.FindGameObjectsWithTag("SubCamera")[0];
-		subCam.SetActive (false);
-		
-		originalPosition = mainCam.transform.position;
-		distanceFromPlayer = originalPosition;
+		setupCamera ();
 	}
 
 	void Update () {
-		if (usingMainCam) 
+		if (usingMainCam && mainCam != null) 
 		{
 			if (player == null) 
 			{
@@ -38,20 +31,26 @@ public class CameraController : MonoBehaviour {
 	public void InitializePosition(GameObject newPlayer)
 	{
 		player = newPlayer;
+		setupCamera ();
+	}
+
+	void setupCamera()
+	{
+		usingMainCam = true;
+		mainCam = GameObject.FindGameObjectWithTag("MainCamera");
+		
+		originalPosition = mainCam.transform.position;
+		distanceFromPlayer = originalPosition;
 	}
 
 	public void ChangeCamera()
 	{
 		if (usingMainCam) 
 		{
-			mainCam.SetActive (false);
-			subCam.SetActive (true);
 			usingMainCam = false;
 		}
 		else 
 		{
-			mainCam.SetActive (true);
-			subCam.SetActive (false);
 			usingMainCam = true;
 		}
 	}
