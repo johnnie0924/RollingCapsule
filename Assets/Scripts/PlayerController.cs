@@ -2,15 +2,16 @@
 using System.Collections;
 
 public class PlayerController : MonoBehaviour {
-	
-	public float speed;
-	public float jumpPower;
 
-	public float reSizeDelay = 100f;
-	public float superModeDelay = 100f;
-	public float copyMyselfDelay = 10f;
-	public float copyMyselfDelayPerSpawn = 0.5f;
-	public int copyMyselfCount = 5;
+	public PlayerStatus playerStatus;
+//	public float speed;
+//	public float jumpPower;
+//
+//	public float reSizeDelay = 100f;
+//	public float superModeDelay = 100f;
+//	public float copyMyselfDelay = 10f;
+//	public float copyMyselfDelayPerSpawn = 0.5f;
+//	public int copyMyselfCount = 5;
 
 	private bool isJumping;
 	private bool isChangeSize;
@@ -48,7 +49,7 @@ public class PlayerController : MonoBehaviour {
 		}
 		#endif
 		
-		#if UNITY_EDITOR
+		#if UNITY_EDITOR || UNITY_STANDALONE || UNITY_WEBPLAYER
 		float moveVertical = Input.GetAxis ("Vertical");
 		float moveHorizontal = Input.GetAxis ("Horizontal");
 		
@@ -96,7 +97,7 @@ public class PlayerController : MonoBehaviour {
 			}
 		}
 
-		GetComponent<Rigidbody>().AddForce (movement * speed * Time.deltaTime);
+		GetComponent<Rigidbody>().AddForce (movement * playerStatus.speed * Time.deltaTime);
 	}
 	
 	void OnCollisionEnter(Collision other) 
@@ -132,7 +133,7 @@ public class PlayerController : MonoBehaviour {
 	{
 		isJumping = true;
 		SoundManager.instance.PlayJump ();
-		GetComponent<Rigidbody>().AddForce (new Vector3 (0.0f, 1.0f, 0.0f) * speed * jumpPower * Time.deltaTime);
+		GetComponent<Rigidbody>().AddForce (new Vector3 (0.0f, 1.0f, 0.0f) * playerStatus.speed * playerStatus.jumpPower * Time.deltaTime);
 	}
 
 	IEnumerator ChangeSize()
@@ -140,7 +141,7 @@ public class PlayerController : MonoBehaviour {
 		isChangeSize = true;
 		Vector3 originalSize = transform.localScale;
 		transform.localScale = originalSize * 3;
-		yield return new WaitForSeconds (reSizeDelay);
+		yield return new WaitForSeconds (playerStatus.reSizeDelay);
 		transform.localScale = originalSize;
 		isChangeSize = false;
 	}
@@ -150,7 +151,7 @@ public class PlayerController : MonoBehaviour {
 		isSuperMode = true;
 		Color original = transform.GetComponent<Renderer> ().material.color;
 		transform.GetComponent<Renderer> ().material.color = Color.yellow;
-		yield return new WaitForSeconds (superModeDelay);
+		yield return new WaitForSeconds (playerStatus.superModeDelay);
 		transform.GetComponent<Renderer> ().material.color = original;
 		isSuperMode = false;
 	}
@@ -158,18 +159,18 @@ public class PlayerController : MonoBehaviour {
 	IEnumerator CopyMyself()
 	{
 		isCopyMyself = true;
-		GameObject[] copies = new GameObject[copyMyselfCount]; 
-		for(int i = 0;i < copyMyselfCount; i++)
+		GameObject[] copies = new GameObject[playerStatus.copyMyselfCount]; 
+		for(int i = 0;i < playerStatus.copyMyselfCount; i++)
 		{
 			copies[i] = Instantiate(GameManager.instance.player,transform.localPosition,Quaternion.identity) as GameObject;
 			copies[i].GetComponent<Rigidbody>().AddForce(new Vector3 (0.0f, 1.0f, 0.0f));
-			yield return new WaitForSeconds (copyMyselfDelayPerSpawn);
+			yield return new WaitForSeconds (playerStatus.copyMyselfDelayPerSpawn);
 		}
-		yield return new WaitForSeconds (copyMyselfDelay);
-		for (int i = 0; i < copyMyselfCount; i++) 
+		yield return new WaitForSeconds (playerStatus.copyMyselfDelay);
+		for (int i = 0; i < playerStatus.copyMyselfCount; i++) 
 		{
 			Destroy (copies [i]);
-			yield return new WaitForSeconds (copyMyselfDelayPerSpawn);
+			yield return new WaitForSeconds (playerStatus.copyMyselfDelayPerSpawn);
 		}
 		isCopyMyself = false;
 	}

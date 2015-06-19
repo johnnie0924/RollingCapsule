@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections;
 using UnityEngine.UI;
 
@@ -10,13 +11,16 @@ public class GameManager : MonoBehaviour {
 	[HideInInspector] public GameObject StageSelectCanvas;
 	[HideInInspector] public GameObject AndroidInputCanvas;
 	[HideInInspector] public GameObject ProgressSlider;
+	[HideInInspector] public GameObject Timer;
 	[HideInInspector] public GameObject FinalDisplay;
 	[HideInInspector] public Image FinalImage;
 
+	private IEnumerator timerCoroutine;
 	public GameObject player;
 	public GameObject canvasesPrefab;
 	public RectTransform stageSelecterPrefab = null;
 	public Texture2D[] picList;
+	public PlayerStatus playerStatus;
 
 	[HideInInspector] public int targetCount = 1;
 	[HideInInspector] public int nowCount = 1;
@@ -38,7 +42,7 @@ public class GameManager : MonoBehaviour {
 			Destroy(instance);
 		}
 
-		DontDestroyOnLoad (instance);
+//		DontDestroyOnLoad (instance);
 
 //		setupGame ();
 	}
@@ -57,12 +61,14 @@ public class GameManager : MonoBehaviour {
 		StageSelectCanvas = GameObject.FindGameObjectWithTag ("StageSelectCanvas");
 		AndroidInputCanvas = GameObject.FindGameObjectWithTag ("AndroidInputCanvas");
 		ProgressSlider = GameObject.FindGameObjectWithTag ("ProgressSlider");
+		Timer = GameObject.FindGameObjectWithTag ("Timer");
 		FinalDisplay = GameObject.FindGameObjectWithTag ("FinalDisplay");
 		FinalImage = GameObject.FindGameObjectWithTag ("FinalImage").GetComponent<Image>();
 		StageSelectCanvas.SetActive (true);
 		AndroidInputCanvas.SetActive (false);
 		FinalDisplay.SetActive (false);
 		ProgressSlider.SetActive (false);
+		Timer.SetActive (false);
 		
 		createStageSelecter ();
 	}
@@ -92,10 +98,15 @@ public class GameManager : MonoBehaviour {
 		FinalImage.sprite = Sprite.Create(picData,new Rect(0, 0, picData.width, picData.height),Vector2.zero);
 		GameObject newPlayer = Instantiate (player, new Vector3(5f,10f,5f), Quaternion.identity) as GameObject;
 		newPlayer.GetComponent<PlayerController> ().isMain = true;
+		newPlayer.GetComponent<PlayerController> ().playerStatus = SaveDataManager.LoadData<SaveData> ().playerStatus;
 		CameraController.InitializePosition(newPlayer);
 		StageSelectCanvas.SetActive (false);
 		AndroidInputCanvas.SetActive (true);
 		ProgressSlider.SetActive (true);
+		Timer.SetActive (true);
+		timerCoroutine = UpdateTimer();
+		StartCoroutine(timerCoroutine);
+
 	}
 	
 	public void CheckIfGameClear()
@@ -103,6 +114,7 @@ public class GameManager : MonoBehaviour {
 		if (nowCount >= targetCount) 
 		{
 			Debug.Log ("GameClear");
+			StopCoroutine(timerCoroutine);
 			CameraController.ChangeCamera();
 			StartCoroutine(SubCamMove(5.0f));
 			FinalDisplay.SetActive (true);
@@ -126,4 +138,15 @@ public class GameManager : MonoBehaviour {
 		transform.position = target;
 	}
 
+	IEnumerator UpdateTimer()
+	{
+		float StartTime = Time.time;
+		float CurrentTime = 0f;
+		while(true)
+		{
+			CurrentTime = Time.time - StartTime;
+			Timer.GetComponentInChildren<Text>().text = new TimeSpan(0, 0, (int)CurrentTime).ToString();
+			yield return new WaitForSeconds(1);
+		}
+	}
 }
