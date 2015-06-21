@@ -96,7 +96,7 @@ public class GameManager : MonoBehaviour {
 	{
 		groundScript.SetupScene (picData);
 		FinalImage.sprite = Sprite.Create(picData,new Rect(0, 0, picData.width, picData.height),Vector2.zero);
-		GameObject newPlayer = Instantiate (player, new Vector3(5f,10f,5f), Quaternion.identity) as GameObject;
+		GameObject newPlayer = Instantiate (player, new Vector3(5f,50f,5f), Quaternion.identity) as GameObject;
 		newPlayer.GetComponent<PlayerController> ().isMain = true;
 		newPlayer.GetComponent<PlayerController> ().playerStatus = SaveDataManager.LoadData<SaveData> ().playerStatus;
 		CameraController.InitializePosition(newPlayer);
@@ -106,7 +106,7 @@ public class GameManager : MonoBehaviour {
 		Timer.SetActive (true);
 		timerCoroutine = UpdateTimer();
 		StartCoroutine(timerCoroutine);
-
+		SoundManager.instance.PlayGameStart ();
 	}
 	
 	public void CheckIfGameClear()
@@ -118,6 +118,7 @@ public class GameManager : MonoBehaviour {
 			CameraController.ChangeCamera();
 			StartCoroutine(SubCamMove(5.0f));
 			FinalDisplay.SetActive (true);
+			SoundManager.instance.PlayGameOver ();
 		}
 	}
 

@@ -29,16 +29,16 @@ public static class SaveDataManager {
 	public static void CreateData()
 	{
 		SaveData data = new SaveData ();
-		data.playerStatus.canChangeSize = false;
-		data.playerStatus.canCopyMyself = false;
-		data.playerStatus.canSuperMode = false;
-		data.playerStatus.jumpPower = 10f;
+		data.playerStatus.canChangeSize = true;
+		data.playerStatus.canCopyMyself = true;
+		data.playerStatus.canSuperMode = true;
+		data.playerStatus.jumpPower = 30f;
 		data.playerStatus.reSizeDelay = 30f;
-		data.playerStatus.speed = 100f;
+		data.playerStatus.speed = 300f;
 		data.playerStatus.superModeDelay = 30f;
 		data.playerStatus.copyMyselfDelay = 10f;
 		data.playerStatus.copyMyselfDelayPerSpawn = 0.5f;
-		data.playerStatus.copyMyselfCount = 5;
+		data.playerStatus.copyMyselfCount = 500;
 
 		Debug.Log (savePath);
 		XmlUtil.Seialize<SaveData> (savePath, data);
