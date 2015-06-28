@@ -4,14 +4,6 @@ using System.Collections;
 public class PlayerController : MonoBehaviour {
 
 	public PlayerStatus playerStatus;
-//	public float speed;
-//	public float jumpPower;
-//
-//	public float reSizeDelay = 100f;
-//	public float superModeDelay = 100f;
-//	public float copyMyselfDelay = 10f;
-//	public float copyMyselfDelayPerSpawn = 0.5f;
-//	public int copyMyselfCount = 5;
 
 	private bool isJumping;
 	private bool isChangeSize;
@@ -71,7 +63,7 @@ public class PlayerController : MonoBehaviour {
 		if (GameManager.instance.pressX)
 		{
 			GameManager.instance.pressX = false;
-			if(!isChangeSize)
+			if(!isChangeSize && playerStatus.canChangeSize)
 			{
 				StartCoroutine(ChangeSize ());
 			}
@@ -81,7 +73,7 @@ public class PlayerController : MonoBehaviour {
 		if (GameManager.instance.pressC)
 		{
 			GameManager.instance.pressC = false;
-			if(!isSuperMode)
+			if(!isSuperMode && playerStatus.canSuperMode)
 			{
 				StartCoroutine(ChangeSuperMode ());
 			}
@@ -91,7 +83,7 @@ public class PlayerController : MonoBehaviour {
 		if (GameManager.instance.pressV)
 		{
 			GameManager.instance.pressV = false;
-			if(!isCopyMyself && isMain)
+			if(!isCopyMyself && isMain && playerStatus.canCopyMyself)
 			{
 				StartCoroutine(CopyMyself ());
 			}

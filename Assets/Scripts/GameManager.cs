@@ -18,9 +18,7 @@ public class GameManager : MonoBehaviour {
 	private IEnumerator timerCoroutine;
 	public GameObject player;
 	public GameObject canvasesPrefab;
-	public RectTransform stageSelecterPrefab = null;
-	public Texture2D[] picList;
-	public PlayerStatus playerStatus;
+	[HideInInspector] public PlayerStatus playerStatus;
 
 	[HideInInspector] public int targetCount = 1;
 	[HideInInspector] public int nowCount = 1;
@@ -41,14 +39,6 @@ public class GameManager : MonoBehaviour {
 		{
 			Destroy(instance);
 		}
-
-//		DontDestroyOnLoad (instance);
-
-//		setupGame ();
-	}
-
-	private void OnLevelWasLoaded (int index)
-	{
 		setupGame ();
 	}
 
@@ -69,22 +59,6 @@ public class GameManager : MonoBehaviour {
 		FinalDisplay.SetActive (false);
 		ProgressSlider.SetActive (false);
 		Timer.SetActive (false);
-		
-		createStageSelecter ();
-	}
-
-	private void createStageSelecter()
-	{
-		for(int i=0; i < picList.Length; i++)
-		{
-			RectTransform item = GameObject.Instantiate(stageSelecterPrefab) as RectTransform;
-			item.GetComponent<StageSelecter>().picData = picList[i];
-			
-			item.SetParent(GameObject.FindGameObjectWithTag("StageSelectContent").transform, false);
-			
-			Text text = item.GetComponentInChildren<Text>();
-			text.text = "item:" + i.ToString() + " name:" + picList[i].name;
-		}
 	}
 
 	public void UpdateProgressBar()
